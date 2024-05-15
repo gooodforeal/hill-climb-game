@@ -1,31 +1,41 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class NitroSystem : MonoBehaviour
 {
-    public float maxNitro = 100f;
+    public static NitroSystem instance;
+    [SerializeField] private Image _nitroImage;
+    [SerializeField] private float maxNitro = 100f;
     public float currentNitro;
     public float nitroConsumption = 25f;
     public float nitroRecoveryRate = 10f;
     public float recoveryDelay = 2f;
     public bool isRecovering = false;
     public bool flag;
+
+    private void Awake() {
+        if (instance == null) {
+            instance = this;
+        }
+    }
     void Start()
     {
         currentNitro = maxNitro;
+        UpdateUI();
     }
     void Update() 
     {
         if (flag == true) {
             UseNitro();
         }
+        UpdateUI();
     }
 
     public void UseNitro()
     {
         if (currentNitro > 0){
             currentNitro -= nitroConsumption * Time.deltaTime;
-
             if (currentNitro < 0)
                 currentNitro = 0;
         }
@@ -34,6 +44,11 @@ public class NitroSystem : MonoBehaviour
     public float GetNitro()
     {
         return currentNitro;
+    }
+    
+    public bool GetIsrecovering()
+    {
+        return isRecovering;
     }
 
     public void StartNitroRecover()
@@ -55,5 +70,9 @@ public class NitroSystem : MonoBehaviour
 
         currentNitro = maxNitro;
         isRecovering = false;
+    }
+
+    private void UpdateUI() {
+        _nitroImage.fillAmount = (currentNitro / maxNitro);
     }
 }

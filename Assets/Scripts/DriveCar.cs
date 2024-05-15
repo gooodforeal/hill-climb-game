@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -21,10 +22,12 @@ public class DriveCar : MonoBehaviour{
     private void Update(){
         
         if (Input.GetKeyDown(KeyCode.Space) && nitroSystem.GetNitro() > 0){
-            nitroSystem.flag = true;
-            isAccelerating = true;
+            if (nitroSystem.GetIsrecovering() == false) {
+                nitroSystem.flag = true;
+                isAccelerating = true;
+            }
         }
-        if (Input.GetKeyUp(KeyCode.Space)){
+        if (Input.GetKeyUp(KeyCode.Space) || nitroSystem.GetNitro() < Mathf.Epsilon){
             isAccelerating = false;
             _speed = 120f;
             nitroSystem.flag = false;
